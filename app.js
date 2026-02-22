@@ -80,6 +80,12 @@ function takeCommand(message) {
 
     }
 
+    else if (message.includes("how are you")) {
+
+        speak("I am working fine, thank you");
+
+    }
+
     else if (message.includes("open youtube")) {
 
         speak("Opening YouTube");
