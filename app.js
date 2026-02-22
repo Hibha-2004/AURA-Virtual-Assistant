@@ -1,52 +1,52 @@
-// AURA - Artificial Unified Responsive Assistant
-
-const btn = document.querySelector('#btn');
-const content = document.querySelector('#content');
+const btn = document.getElementById("btn");
+const content = document.getElementById("content");
 
 // Speak function
 function speak(text) {
 
-    const utterance = new SpeechSynthesisUtterance(text);
+    const text_speak = new SpeechSynthesisUtterance(text);
 
-    utterance.rate = 1;
-    utterance.pitch = 1;
-    utterance.volume = 1;
+    text_speak.rate = 1;
+    text_speak.volume = 1;
+    text_speak.pitch = 1;
 
-    const voices = speechSynthesis.getVoices();
-    const voice = voices.find(v => v.lang === "en-US");
-
-    if (voice) utterance.voice = voice;
-
-    speechSynthesis.cancel();
-    speechSynthesis.speak(utterance);
+    window.speechSynthesis.speak(text_speak);
 }
 
-// Wish user
+// Wish function
 function wishMe() {
 
-    let hour = new Date().getHours();
+    const hour = new Date().getHours();
 
     if (hour < 12) {
-        speak("Good morning. I am AURA. How can I assist you?");
+        speak("Good Morning. I am Aura. How can I help you?");
     }
+
     else if (hour < 17) {
-        speak("Good afternoon. I am AURA. How can I assist you?");
+        speak("Good Afternoon. I am Aura. How can I help you?");
     }
+
     else {
-        speak("Good evening. I am AURA. How can I assist you?");
+        speak("Good Evening. I am Aura. How can I help you?");
     }
 }
 
-// Speech Recognition setup
+window.addEventListener('load', () => {
+
+    speechSynthesis.cancel();
+    wishMe();
+
+});
+
+// Speech Recognition Fix
 const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
 
 if (!SpeechRecognition) {
 
-    alert("Please use Google Chrome for full functionality");
+    alert("Speech Recognition not supported. Use Google Chrome.");
 
-}
-else {
+} else {
 
     const recognition = new SpeechRecognition();
 
@@ -55,143 +55,57 @@ else {
     btn.addEventListener("click", () => {
 
         recognition.start();
-        btn.innerText = "Listening...";
+
+        content.innerText = "Listening...";
 
     });
 
     recognition.onresult = (event) => {
 
-        let transcript = event.results[0][0].transcript.toLowerCase();
+        const transcript = event.results[0][0].transcript;
 
         content.innerText = transcript;
 
-        takeCommand(transcript);
+        takeCommand(transcript.toLowerCase());
 
-    };
-
-    recognition.onend = () => {
-        btn.innerText = "Click to Speak";
     };
 }
 
-// Command handler
+// Commands
 function takeCommand(message) {
 
-    // Greetings
-    if (message.includes("hello") || message.includes("hi")) {
+    if (message.includes("hello")) {
 
-        speak("Hello. How can I help you?");
-
-    }
-
-    else if (message.includes("how are you")) {
-
-        speak("I am functioning perfectly. Thank you for asking.");
+        speak("Hello, how can I help you?");
 
     }
 
-    else if (message.includes("who are you")) {
-
-        speak("I am AURA. Your Artificial Unified Responsive Assistant.");
-
-    }
-
-    else if (message.includes("who created you")) {
-
-        speak("I was created by Hibha.");
-
-    }
-
-    else if (message.includes("what can you do")) {
-
-        speak("I can open websites, tell time, answer questions, and assist you with tasks.");
-
-    }
-
-    // Open websites
     else if (message.includes("open youtube")) {
 
         speak("Opening YouTube");
-        window.open("https://youtube.com", "_blank");
+        window.open("https://youtube.com");
 
     }
 
     else if (message.includes("open google")) {
 
         speak("Opening Google");
-        window.open("https://google.com", "_blank");
+        window.open("https://google.com");
 
     }
 
-    else if (message.includes("open gmail")) {
-
-        speak("Opening Gmail");
-        window.open("https://mail.google.com", "_blank");
-
-    }
-
-    else if (message.includes("open whatsapp")) {
-
-        speak("Opening WhatsApp");
-        window.open("https://web.whatsapp.com", "_blank");
-
-    }
-
-    // Open calculator (web fallback)
-    else if (message.includes("open calculator")) {
-
-        speak("Opening calculator");
-
-        window.open("https://www.google.com/search?q=calculator", "_blank");
-
-    }
-
-    // Open notepad (web fallback)
-    else if (message.includes("open notepad")) {
-
-        speak("Opening notepad");
-
-        window.open("https://anotepad.com", "_blank");
-
-    }
-
-    // Time
     else if (message.includes("time")) {
 
         let time = new Date().toLocaleTimeString();
-
         speak("The time is " + time);
 
     }
 
-    // Date
-    else if (message.includes("date")) {
-
-        let date = new Date().toLocaleDateString();
-
-        speak("Today's date is " + date);
-
-    }
-
-    // Default search
     else {
 
         speak("Searching Google");
-
         window.open(
-            `https://www.google.com/search?q=${message}`,
-            "_blank"
+            "https://www.google.com/search?q=" + message
         );
-
     }
 }
-
-// Fix speech issue
-document.addEventListener("click", () => {
-    speechSynthesis.resume();
-});
-
-// Start assistant
-window.onload = () => {
-    wishMe();
-};
