@@ -80,22 +80,10 @@ function takeCommand(message) {
 
     }
 
-    else if (message.includes("hey AURA")) {
-
-        speak("Hi, how can I help you?");
-
-    }
-
-    else if (message.includes("open calculator")) {
-
-        speak("Opening Calculator");
-        window.open("https://youtube.com");
-    }
-
     else if (message.includes("open youtube")) {
 
         speak("Opening YouTube");
-        window.open("https://calculationcalculator.com/google-calculator");
+        window.open("https://youtube.com");
 
     }
 
