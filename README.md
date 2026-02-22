@@ -25,13 +25,13 @@ AURA is a modern web-based virtual voice assistant built using HTML, CSS, and Ja
 
 ## 📂 Project Structure
 AURA-Virtual-Assistant/
-│
-├── index.html
-├── style.css
-├── app.js
-├── aura.png
-├── avatar.png
-└── README.md
+- │
+- ├── index.html
+- ├── style.css
+- ├── app.js
+- ├── aura.png
+- ├── avatar.png
+- └── README.md
 
 ## 🚀 How to Run Locally
 
