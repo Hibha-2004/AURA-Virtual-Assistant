@@ -4,11 +4,15 @@ const content = document.getElementById("content");
 // Speak function
 function speak(text) {
 
+    // Cancel any ongoing speech first (IMPORTANT FIX)
+    window.speechSynthesis.cancel();
+
     const text_speak = new SpeechSynthesisUtterance(text);
 
     text_speak.rate = 1;
     text_speak.volume = 1;
     text_speak.pitch = 1;
+    text_speak.lang = "en-US";
 
     window.speechSynthesis.speak(text_speak);
 }
@@ -31,10 +35,17 @@ function wishMe() {
     }
 }
 
+// IMPORTANT FIX: Wait for user interaction before speech
+document.addEventListener("click", () => {
+    speechSynthesis.resume();
+});
+
+// Load event
 window.addEventListener('load', () => {
 
-    speechSynthesis.cancel();
-    wishMe();
+    setTimeout(() => {
+        wishMe();
+    }, 500);
 
 });
 
@@ -44,19 +55,25 @@ const SpeechRecognition =
 
 if (!SpeechRecognition) {
 
-    alert("Speech Recognition not supported. Use Google Chrome.");
+    alert("Speech Recognition not supported. Please use Google Chrome.");
 
 } else {
 
     const recognition = new SpeechRecognition();
 
     recognition.lang = "en-US";
+    recognition.continuous = false;
+    recognition.interimResults = false;
 
     btn.addEventListener("click", () => {
 
-        recognition.start();
-
-        content.innerText = "Listening...";
+        try {
+            recognition.start();
+            content.innerText = "Listening...";
+        }
+        catch (error) {
+            console.log("Recognition already running");
+        }
 
     });
 
@@ -67,6 +84,19 @@ if (!SpeechRecognition) {
         content.innerText = transcript;
 
         takeCommand(transcript.toLowerCase());
+
+    };
+
+    recognition.onerror = (event) => {
+
+        console.error(event.error);
+        speak("Sorry, I could not hear you.");
+
+    };
+
+    recognition.onend = () => {
+
+        content.innerText = "Click here to speak";
 
     };
 }
@@ -80,23 +110,47 @@ function takeCommand(message) {
 
     }
 
+    else if (message.includes("hey aura")) {
+
+        speak("Hi there, how can I help you?");
+
+    }
+
     else if (message.includes("how are you")) {
 
         speak("I am working fine, thank you");
 
     }
 
+    else if (message.includes("who created you") || message.includes("who made you")) {
+
+        speak("I was created by Hibha, a talented developer");
+
+    }
+
+    else if (message.includes("your name")) {
+
+        speak("My name is Aura, Artificial Unified Responsive Assistant.");
+
+    }
+
+    else if (message.includes("what can you do") || message.includes("who are you")) {
+
+        speak("I am Aura, Artificial Unified Responsive Assistant. I can listen to your voice commands, open websites, tell time and date, search the internet, and assist you with everyday tasks. I am designed to help you efficiently.");
+
+    }
+
     else if (message.includes("open youtube")) {
 
         speak("Opening YouTube");
-        window.open("https://youtube.com");
+        window.open("https://youtube.com", "_blank");
 
     }
 
     else if (message.includes("open google")) {
 
         speak("Opening Google");
-        window.open("https://google.com");
+        window.open("https://google.com", "_blank");
 
     }
 
@@ -107,11 +161,19 @@ function takeCommand(message) {
 
     }
 
+    else if (message.includes("date")) {
+
+        let date = new Date().toLocaleDateString();
+        speak("Today's date is " + date);
+
+    }
+
     else {
 
         speak("Searching Google");
         window.open(
-            "https://www.google.com/search?q=" + message
+            "https://www.google.com/search?q=" + message,
+            "_blank"
         );
     }
 }
