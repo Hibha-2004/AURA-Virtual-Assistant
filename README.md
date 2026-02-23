@@ -3,7 +3,7 @@
 AURA is a modern web-based virtual voice assistant built using HTML, CSS, and JavaScript. It can interact with users through voice commands, perform basic tasks, and provide an intelligent assistant-like experience directly in the browser.
 
 ## 🌐 Live Demo
-🔗 https://hibha-2004.github.io/AURA-Virtual-Assistant/
+🔗 https://aura-assistant-ai.netlify.app
 
 ## 📌 Features
 
