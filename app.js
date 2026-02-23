@@ -1,6 +1,14 @@
 const btn = document.getElementById("btn");
 const content = document.getElementById("content");
 
+navigator.mediaDevices.getUserMedia({ audio: true })
+.then(() => {
+    console.log("Microphone permission granted");
+})
+.catch(() => {
+    console.log("Microphone permission denied");
+});
+
 // Speak function
 function speak(text) {
 
