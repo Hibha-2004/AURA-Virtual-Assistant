@@ -1,9 +1,8 @@
 const btn = document.getElementById("btn");
 const content = document.getElementById("content");
 
-// ✅ FIX 1: Track if user has interacted (needed for mobile speech)
-let userHasInteracted = false;
 let wishSpoken = false;
+let micPermissionGranted = false;
 
 // ✅ FIX 2: Speak function with Android keep-alive fix
 function speak(text) {
@@ -53,19 +52,26 @@ if (!SpeechRecognition) {
     recognition.continuous = false;
     recognition.interimResults = false;
 
-    // ✅ FIX 4: Request mic permission + speak greeting on FIRST button click
+    // ✅ KEY FIX: Request mic permission IMMEDIATELY on first click
+    // getUserMedia must be called directly inside click handler — no delays, no early returns before it
     btn.addEventListener("click", () => {
 
-        // ✅ Speak greeting on very first interaction (mobile safe)
-        if (!wishSpoken) {
-            wishSpoken = true;
-            wishMe();
-            return; // Let greeting finish, user clicks again to speak
-        }
-
-        // ✅ FIX 5: Request microphone permission explicitly before starting
         navigator.mediaDevices.getUserMedia({ audio: true })
-            .then(() => {
+            .then((stream) => {
+                micPermissionGranted = true;
+
+                // Stop stream tracks — we just needed the permission grant
+                stream.getTracks().forEach(track => track.stop());
+
+                // Speak greeting on very first click
+                if (!wishSpoken) {
+                    wishSpoken = true;
+                    wishMe();
+                    content.innerText = "Click again to speak a command";
+                    return;
+                }
+
+                // Start recognition on subsequent clicks
                 try {
                     recognition.start();
                     content.innerText = "Listening...";
@@ -75,7 +81,7 @@ if (!SpeechRecognition) {
             })
             .catch((err) => {
                 console.error("Microphone permission denied:", err);
-                content.innerText = "Microphone access denied. Please allow mic permission.";
+                content.innerText = "Microphone access denied. Please allow mic in browser settings.";
                 speak("Please allow microphone permission to use AURA.");
             });
     });
