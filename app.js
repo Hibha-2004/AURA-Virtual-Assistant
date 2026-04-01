@@ -117,9 +117,12 @@ function takeCommand(message) {
     if (message.includes("hello")) {
         speak("Hello, how can I help you?");
 
-    } else if (message.includes("hey aura")) {
+    } else if (message.includes("hey")) {
         speak("Hi there, how can I help you?");
 
+    } else if (message.includes("hi")) {
+        speak("Hi there, how can I help you?");
+    
     } else if (message.includes("how are you")) {
         speak("I am working fine, thank you");
 
@@ -130,7 +133,7 @@ function takeCommand(message) {
         speak("My name is Aura, Artificial Unified Responsive Assistant.");
 
     } else if (message.includes("what can you do") || message.includes("who are you")) {
-        speak("I am Aura, Artificial Unified Responsive Assistant. I can listen to your voice commands, open websites, tell time and date, search the internet, and assist you with everyday tasks.");
+        speak("I can listen to your voice commands, open websites, tell time and date, search the internet, and assist you with everyday tasks.");
 
     } else if (message.includes("open youtube")) {
         speak("Opening YouTube");
